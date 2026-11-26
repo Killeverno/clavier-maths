@@ -10,7 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: unzip -o clavier-maths.zip
+        with:
+          fetch-depth: 0
+      - name: Décompresser le zip le plus récent
+        run: |
+          ZIP=$(for f in *.zip; do echo "$(git log -1 --format=%ct -- "$f") $f"; done | sort -n | tail -1 | cut -d' ' -f2-)
+          echo "Zip utilisé : $ZIP"
+          unzip -o "$ZIP"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
